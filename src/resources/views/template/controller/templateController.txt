@@ -1,0 +1,115 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\[model];
+use Illuminate\Database\QueryException;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
+class [model]Controller extends Controller
+{
+    /**
+     * @param Request $request
+     * @return mixed
+     */
+
+    public function index(Request $request) {
+
+        /**
+         * Captura los datos proveniente del POST ajax del DataTable
+         */
+        if ($request->isMethod('POST')) {
+
+            $search = $request->json("search");
+            $start = $request->json("start");
+            $length = $request->json("length");
+
+            // Creamos la query para la consulta
+            $data = [model]::query()
+                ->select([
+                    'id',
+                ])->groupBy('id');
+
+            $total = $data->get()->count();
+
+            // Agregamos las condiciones de filtro
+            if (!empty($search["value"]))
+                $data = $data->where("id", "LIKE", "%{$search["value"]}%");
+
+            $count = $data->get()->count();
+
+            $data = $data->limit($length)
+                ->offset($start)
+                ->get()->toArray();
+
+            // damos la respuesta en formato JSON como lo requeire el DataTable
+            return response()->json([
+                "draw" => $request->json("draw"),
+                "recordsTotal" => $total,
+                "recordsFiltered" => $count,
+                "data" => $data
+            ]);
+        }
+
+        return view('[template]\[template]');
+    }
+
+    /**
+     * Function for the create or update the new [model].
+     * @param Request $request
+     * @param bool $id
+     * @return mixed
+     */
+
+    public function create(Request $request, $id = false) {
+
+        $[model] = $id ? [model]::findById($id) : new [model]();
+
+        /**
+         * Captura los datos enviados por POST para ser procesados.
+         */
+        if ($request->isMethod("POST")) {
+
+            $error = false;
+            $message = "";
+
+            /**
+             * Asignamos los parametros al modelo
+             */
+            if (!$error) {
+                $[model]->example = $request->post("");
+
+                try {
+                    $error = !$[model]->save();
+                } catch (QueryException $e) {
+                    $error = true;
+                }
+            }
+
+            if (!$error) {
+                return redirect()->route("[template]-list")->with("success", "Registro guardado correctamente.");
+            } else {
+                $request->session()->flash("danger", $message ? $message : "Error inesperado al intentar almacenar el registro.");
+            }
+
+        }
+        return view("[template]\create",["[model]" => $[model]]);
+    }
+
+    /**
+     * Function for delete [model]
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
+
+    public function delete($id) {
+        $[model] = [model]::findById($id);
+        if ($[model]) {
+            return response()->json($[model]->delete());
+        }
+        return response()->json(false);
+    }
+
+}

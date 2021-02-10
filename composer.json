@@ -1,0 +1,36 @@
+{
+    "name": "santimilos/crud-package",
+    "description": "command to create a complete crud in just a few seconds",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Santiago",
+            "email": "srsantiango1@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "CrudPackage\\": "src"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "CrudPackage\\CrudPackageServiceProvider"
+            ],
+            "dont-discover": [
+                "laravel/dusk"
+            ]
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "CrudPackage\\Tests\\": "tests"
+        }
+    },
+    "require-dev": {
+        "orchestra/testbench": "^6.0",
+        "phpunit/phpunit": "^9.5"
+    }
+}
