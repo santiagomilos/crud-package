@@ -356,7 +356,7 @@ class MakeCrudCommand extends Command
             $this->error("File js/appAjax.js already exists!");
         }
 
-        $appJs = file_get_contents(base_path('vendor/santimilos/crud-package/src/resources/views/js/app.js'));
+        $appJs = file_get_contents(base_path('vendor/santimilos/crud-package/src/resources/views/js/appAjax.js'));
         file_put_contents(public_path('js/appAjax.js'), $appJs);
     }
 
