@@ -5,6 +5,7 @@
     <link href="{{ asset("css/libs/jquery-confirm.min.css") }}" rel="stylesheet">
 @endpush
 @push("endBody")
+    <script src="{{ asset('js/appAjax.js') }}"></script>
     <script src="{{ asset("js/libs/jquery-confirm.min.js")}}"></script>
     <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
@@ -26,7 +27,7 @@
                 <div class="col text-right">
                     <a href="{{ route("[template]-form") }}" class="btn btn-dark">
                         <i class="fa fa-save"></i>
-                        Crear Client
+                        Crear [model]
                     </a>
                 </div>
             </div>

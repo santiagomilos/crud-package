@@ -122,24 +122,34 @@ class MakeCrudCommand extends Command
      */
     public function handle()
     {
-
         if ($this->confirm('Do you wish to continue?')) {
 
             if ($this->confirm('do you want to create the migration fields from the console?')) {
 
                 $labelsCount = $this->ask('how many fields do you want to create?');
 
-                $this->table(
-                    ['Option name', 'usage example'],
-                    $this->optionsLabel
-                );
+                if (!is_numeric($labelsCount)) {
 
-                for($i = 1; $i <= $labelsCount; $i++){
-                    $label = $this->ask('field # '.$i.' please do it this way example:string so that everything works correctly');
+                    $this->line($this->errorMessage);
+                    $this->newLine();
+                    $this->error('error the entered value is not numeric!');
 
-                    array_push($this->labels, $label);
+                    return  $this->error = true;
                 }
 
+                if(!$this->error){
+
+                    $this->table(
+                        ['Option name', 'usage example'],
+                        $this->optionsLabel
+                    );
+
+                    for($i = 1; $i <= $labelsCount; $i++){
+                        $label = $this->ask('field # '.$i.' please do it this way example:string so that everything works correctly');
+
+                        array_push($this->labels, $label);
+                    }
+                }
             }
 
             $model = $this->argument('model');
@@ -211,15 +221,25 @@ class MakeCrudCommand extends Command
             $this->error("File ".strtolower(Str::plural($model)).DIRECTORY_SEPARATOR.'includes'." already exists!");
         }
 
+        if (file_exists(resource_path('views/components/flash-messages.blade.php'))) {
+            $this->error = true;
+            $this->line($this->errorMessage);
+            $this->newLine();
+            $this->error("you already have components with the same name as the components of this package!");
+        }
+
         mkdir(resource_path('views'.DIRECTORY_SEPARATOR.strtolower(Str::plural($model))), 0700);
         mkdir(resource_path('views'.DIRECTORY_SEPARATOR.strtolower(Str::plural($model)).DIRECTORY_SEPARATOR.'assets'), 0700);
         mkdir(resource_path('views'.DIRECTORY_SEPARATOR.strtolower(Str::plural($model)).DIRECTORY_SEPARATOR.'includes'), 0700);
+        mkdir(resource_path('views/components'), 0700);
 
     }
 
     public function makeFiles($model){
         $this->makeViews($model);
         $this->makeJSFile($model);
+        $this->makeComponents();
+        $this->makeIncludeJS();
     }
 
     public function makeViews($model){
@@ -231,6 +251,43 @@ class MakeCrudCommand extends Command
         file_put_contents(resource_path('views'.DIRECTORY_SEPARATOR.strtolower(Str::plural($model)).DIRECTORY_SEPARATOR.strtolower(Str::plural($model)).'.blade.php'), $contentViewList);
         file_put_contents(resource_path('views'.DIRECTORY_SEPARATOR.strtolower(Str::plural($model)).DIRECTORY_SEPARATOR.'create.blade.php'), $contentViewCreate);
         file_put_contents(resource_path('views'.DIRECTORY_SEPARATOR.strtolower(Str::plural($model)).DIRECTORY_SEPARATOR.'includes'.DIRECTORY_SEPARATOR.'_form.blade.php'), $contentViewForm);
+    }
+
+    public function makeComponents(){
+
+        if (file_exists(resource_path('views/components/flash-messages.blade.php'))) {
+            $this->error = true;
+            $this->line($this->errorMessage);
+            $this->newLine();
+            $this->error("Component flash-messages.blade.php already exists!");
+        }
+
+        $componentMessages = file_get_contents(base_path('vendor/santimilos/crud-package/src/resources/views/components/flash-messages.blade.php'));
+        file_put_contents(resource_path('views/components/flash-messages.blade.php'), $componentMessages);
+
+        if (file_exists(resource_path('views/components/title-header.blade.php'))) {
+            $this->error = true;
+            $this->line($this->errorMessage);
+            $this->newLine();
+            $this->error("Component title-header.blade.php already exists!");
+        }
+
+        $componentTitle = file_get_contents(base_path('vendor/santimilos/crud-package/src/resources/views/components/title-header.blade.php'));
+        file_put_contents(resource_path('views/components/title-header.blade.php'), $componentTitle);
+
+    }
+
+    public function makeIncludeJS(){
+
+        if (file_exists(resource_path('views/includes/includejs.blade.php'))) {
+            $this->error = true;
+            $this->line($this->errorMessage);
+            $this->newLine();
+            $this->error("Component title-header.blade.php already exists!");
+        }
+
+        $includeJS = file_get_contents(base_path('vendor/santimilos/crud-package/src/resources/views/includes/includejs.blade.php'));
+        file_put_contents(resource_path('views/includes/includejs.blade.php'), $includeJS);
     }
 
     public function makeListView($model){
@@ -291,6 +348,16 @@ class MakeCrudCommand extends Command
 
         $contentJs = file_get_contents(base_path('vendor/santimilos/crud-package/src/resources/views/template/assets/_template.js'));
         file_put_contents(resource_path('views'.DIRECTORY_SEPARATOR.strtolower(Str::plural($model)).DIRECTORY_SEPARATOR.'assets'.DIRECTORY_SEPARATOR.'_'.strtolower(Str::plural($model)).'.js'), $contentJs);
+
+        if (file_exists(public_path('js/appAjax.js'))) {
+            $this->error = true;
+            $this->line($this->errorMessage);
+            $this->newLine();
+            $this->error("File js/appAjax.js already exists!");
+        }
+
+        $appJs = file_get_contents(base_path('vendor/santimilos/crud-package/src/resources/views/js/app.js'));
+        file_put_contents(public_path('js/appAjax.js'), $appJs);
     }
 
     public function makeMMCR($model){
@@ -402,6 +469,26 @@ class MakeCrudCommand extends Command
             return $this->error = true;
         }
 
+        if (file_exists(resource_path('views/components'))) {
+
+            if (file_exists(resource_path('views/components/flash-messages.blade.php'))) {
+                $this->error = true;
+                $this->line($this->errorMessage);
+                $this->newLine();
+                $this->errorText = "Component flash-messages.blade.php already exists!";
+
+                return $this->error = true;
+            }
+
+            if (file_exists(resource_path('views/components/title-header.blade.php'))) {
+                $this->error = true;
+                $this->line($this->errorMessage);
+                $this->newLine();
+                $this->errorText = "Component title-header.blade.php already exists!";
+
+                return $this->error = true;
+            }
+        }
         return $this->error = false;
     }
 
