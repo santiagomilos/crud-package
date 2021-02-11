@@ -257,6 +257,10 @@ class MakeCrudCommand extends Command
         if(!file_exists(public_path('js'))){
             mkdir(public_path('js'), 0700);
         }
+
+        if(!file_exists(public_path('i18n'))){
+            mkdir(public_path('i18n'), 0700);
+        }
     }
 
     public function makeFiles($model){
@@ -265,6 +269,19 @@ class MakeCrudCommand extends Command
         $this->makeComponents();
         $this->makeIncludeJS();
         $this->makeLayout();
+        $this->makeDatatableSpanish();
+    }
+
+    public function makeDatatableSpanish(){
+        if (file_exists(public_path('i18n/datatables-spanish.json'))) {
+            $this->error = true;
+            $this->line($this->errorMessage);
+            $this->newLine();
+            $this->error("File datatables-spanish.json already exists!");
+        }
+
+        $datatablesSpanish = file_get_contents(base_path('vendor/santimilos/crud-package/src/resources/views/template/i18n/datatables-spanish.json'));
+        file_put_contents(public_path('i18n/datatables-spanish.json'), $datatablesSpanish);
     }
 
     public function makeLayout(){
@@ -382,7 +399,6 @@ class MakeCrudCommand extends Command
             $this->error = true;
             $this->error("File {$path} already exists!");
         }
-
         $contentJs = file_get_contents(base_path('vendor/santimilos/crud-package/src/resources/views/template/assets/_template.js'));
         file_put_contents(resource_path('views'.DIRECTORY_SEPARATOR.strtolower(Str::plural($model)).DIRECTORY_SEPARATOR.'assets'.DIRECTORY_SEPARATOR.'_'.strtolower(Str::plural($model)).'.js'), $contentJs);
 
@@ -392,7 +408,6 @@ class MakeCrudCommand extends Command
             $this->newLine();
             $this->error("File js/appAjax.js already exists!");
         }
-
         $appJs = file_get_contents(base_path('vendor/santimilos/crud-package/src/resources/views/template/js/app.js'));
         file_put_contents(public_path('js/appAjax.js'), $appJs);
     }
@@ -453,7 +468,6 @@ class MakeCrudCommand extends Command
 
     public function makeMigration($model){
 
-
         if (file_exists(base_path('database/migrations'.DIRECTORY_SEPARATOR.date('h_i_s').'_'.rand(100000,999999).'_create_'.strtolower(Str::plural($model)).'_table.php'))) {
             $this->error = true;
             $this->error("Migration {$model} already exists!");
@@ -462,7 +476,7 @@ class MakeCrudCommand extends Command
         if(!empty($this->labels)){
             $this->makeLabels();
             $migrationContent = file_get_contents(base_path('vendor/santimilos/crud-package/src/resources/views/template/migration/templateMigration.txt'));
-            $migrationContent = str_replace(['[template]','[model]','[labels]'], [strtolower(Str::plural($model)), $model, implode("\r\t\t\t" ,$this->labels)], $migrationContent);
+            $migrationContent = str_replace(['[template]','[model]','[labels]'], [strtolower(Str::plural($model)), Str::plural($model), implode("\r\t\t\t" ,$this->labels)], $migrationContent);
             file_put_contents(base_path('database/migrations'.DIRECTORY_SEPARATOR.date('Y_m_d').'_'.rand(100000,999999).'_create_'.strtolower(Str::plural($model)).'_table.php'), $migrationContent);
         }else{
             Artisan::call("make:migration", ['name' => 'create_'.strtolower(Str::plural($model)).'_table']);
@@ -541,6 +555,24 @@ class MakeCrudCommand extends Command
             $this->line($this->errorMessage);
             $this->newLine();
             $this->errorText = "File includejs already exists!";
+
+            return $this->error = true;
+        }
+
+        if (file_exists(public_path('js/appAjax.js'))) {
+            $this->error = true;
+            $this->line($this->errorMessage);
+            $this->newLine();
+            $this->errorText = "File js/appAjax.js already exists!";
+
+            return $this->error = true;
+        }
+
+        if (file_exists(public_path('i18n/datatables-spanish.json'))) {
+            $this->error = true;
+            $this->line($this->errorMessage);
+            $this->newLine();
+            $this->errorText = "File datatables-spanish.json already exists!";
 
             return $this->error = true;
         }

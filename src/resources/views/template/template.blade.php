@@ -2,10 +2,10 @@
 
 @push("head")
     <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet">
-    <link href="{{ asset("css/libs/jquery-confirm.min.css") }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
 @endpush
 @push("endBody")
-    <script src="{{ asset("js/libs/jquery-confirm.min.js")}}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
     @includeJS(["url"=>"[template]/assets/_[template].js", "params" => [
