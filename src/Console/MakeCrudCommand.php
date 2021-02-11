@@ -244,6 +244,10 @@ class MakeCrudCommand extends Command
         if(!file_exists(resource_path('views/components'))){
             mkdir(resource_path('views/components'), 0700);
         }
+
+        if(!file_exists(public_path('js'))){
+            mkdir(public_path('js'), 0700);
+        }
     }
 
     public function makeFiles($model){
