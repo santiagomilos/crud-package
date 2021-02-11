@@ -277,7 +277,7 @@ class MakeCrudCommand extends Command
             $this->error("Component flash-messages.blade.php already exists!");
         }
 
-        $componentMessages = file_get_contents(base_path('vendor/santimilos/crud-package/src/resources/views/components/flash-messages.blade.php'));
+        $componentMessages = file_get_contents(base_path('vendor/santimilos/crud-package/src/resources/views/template/components/flash-messages.blade.php'));
         file_put_contents(resource_path('views/components/flash-messages.blade.php'), $componentMessages);
 
         if (file_exists(resource_path('views/components/title-header.blade.php'))) {
@@ -287,7 +287,7 @@ class MakeCrudCommand extends Command
             $this->error("Component title-header.blade.php already exists!");
         }
 
-        $componentTitle = file_get_contents(base_path('vendor/santimilos/crud-package/src/resources/views/components/title-header.blade.php'));
+        $componentTitle = file_get_contents(base_path('vendor/santimilos/crud-package/src/resources/views/template/components/title-header.blade.php'));
         file_put_contents(resource_path('views/components/title-header.blade.php'), $componentTitle);
 
     }
@@ -301,7 +301,7 @@ class MakeCrudCommand extends Command
             $this->error("Component title-header.blade.php already exists!");
         }
 
-        $includeJS = file_get_contents(base_path('vendor/santimilos/crud-package/src/resources/views/includes/includejs.blade.php'));
+        $includeJS = file_get_contents(base_path('vendor/santimilos/crud-package/src/resources/views/template/includes/includejs.blade.php'));
         file_put_contents(resource_path('views/includes/includejs.blade.php'), $includeJS);
     }
 
