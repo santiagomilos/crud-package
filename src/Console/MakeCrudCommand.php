@@ -250,7 +250,7 @@ class MakeCrudCommand extends Command
             mkdir(resource_path('views/includes'), 0700);
         }
 
-        if(!file_exists(resource_path('views/layouts/app.blade.php'))){
+        if(!file_exists(resource_path('views/layouts'))){
             mkdir(resource_path('views/layouts'), 0700);
         }
 
@@ -273,27 +273,17 @@ class MakeCrudCommand extends Command
     }
 
     public function makeDatatableSpanish(){
-        if (file_exists(public_path('i18n/datatables-spanish.json'))) {
-            $this->error = true;
-            $this->line($this->errorMessage);
-            $this->newLine();
-            $this->error("File datatables-spanish.json already exists!");
+        if (!file_exists(public_path('i18n/datatables-spanish.json'))) {
+            $datatablesSpanish = file_get_contents(base_path('vendor/santimilos/crud-package/src/resources/views/template/i18n/datatables-spanish.json'));
+            file_put_contents(public_path('i18n/datatables-spanish.json'), $datatablesSpanish);
         }
-
-        $datatablesSpanish = file_get_contents(base_path('vendor/santimilos/crud-package/src/resources/views/template/i18n/datatables-spanish.json'));
-        file_put_contents(public_path('i18n/datatables-spanish.json'), $datatablesSpanish);
     }
 
     public function makeLayout(){
-        if (file_exists(resource_path('views/layouts/app.blade.php'))) {
-            $this->error = true;
-            $this->line($this->errorMessage);
-            $this->newLine();
-            $this->error("Layout app.blade.php already exists!");
+        if (!file_exists(resource_path('views/layouts/app.blade.php'))) {
+            $layoutContent = file_get_contents(base_path('vendor/santimilos/crud-package/src/resources/views/template/layouts/app.blade.php'));
+            file_put_contents(resource_path('views/layouts/app.blade.php'), $layoutContent);
         }
-
-        $layoutContent = file_get_contents(base_path('vendor/santimilos/crud-package/src/resources/views/template/layouts/app.blade.php'));
-        file_put_contents(resource_path('views/layouts/app.blade.php'), $layoutContent);
     }
 
     public function makeViews($model){
@@ -309,39 +299,23 @@ class MakeCrudCommand extends Command
 
     public function makeComponents(){
 
-        if (file_exists(resource_path('views/components/flash-messages.blade.php'))) {
-            $this->error = true;
-            $this->line($this->errorMessage);
-            $this->newLine();
-            $this->error("Component flash-messages.blade.php already exists!");
+        if (!file_exists(resource_path('views/components/flash-messages.blade.php'))) {
+            $componentMessages = file_get_contents(base_path('vendor/santimilos/crud-package/src/resources/views/template/components/flash-messages.blade.php'));
+            file_put_contents(resource_path('views/components/flash-messages.blade.php'), $componentMessages);
         }
 
-        $componentMessages = file_get_contents(base_path('vendor/santimilos/crud-package/src/resources/views/template/components/flash-messages.blade.php'));
-        file_put_contents(resource_path('views/components/flash-messages.blade.php'), $componentMessages);
-
-        if (file_exists(resource_path('views/components/title-header.blade.php'))) {
-            $this->error = true;
-            $this->line($this->errorMessage);
-            $this->newLine();
-            $this->error("Component title-header.blade.php already exists!");
+        if (!file_exists(resource_path('views/components/title-header.blade.php'))) {
+            $componentTitle = file_get_contents(base_path('vendor/santimilos/crud-package/src/resources/views/template/components/title-header.blade.php'));
+            file_put_contents(resource_path('views/components/title-header.blade.php'), $componentTitle);
         }
-
-        $componentTitle = file_get_contents(base_path('vendor/santimilos/crud-package/src/resources/views/template/components/title-header.blade.php'));
-        file_put_contents(resource_path('views/components/title-header.blade.php'), $componentTitle);
-
     }
 
     public function makeIncludeJS(){
 
-        if (file_exists(resource_path('views/includes/includejs.blade.php'))) {
-            $this->error = true;
-            $this->line($this->errorMessage);
-            $this->newLine();
-            $this->error("File includejs already exists!");
+        if (!file_exists(resource_path('views/includes/includejs.blade.php'))) {
+            $includeJS = file_get_contents(base_path('vendor/santimilos/crud-package/src/resources/views/template/includes/includejs.blade.php'));
+            file_put_contents(resource_path('views/includes/includejs.blade.php'), $includeJS);
         }
-
-        $includeJS = file_get_contents(base_path('vendor/santimilos/crud-package/src/resources/views/template/includes/includejs.blade.php'));
-        file_put_contents(resource_path('views/includes/includejs.blade.php'), $includeJS);
     }
 
     public function makeListView($model){
@@ -402,14 +376,11 @@ class MakeCrudCommand extends Command
         $contentJs = file_get_contents(base_path('vendor/santimilos/crud-package/src/resources/views/template/assets/_template.js'));
         file_put_contents(resource_path('views'.DIRECTORY_SEPARATOR.strtolower(Str::plural($model)).DIRECTORY_SEPARATOR.'assets'.DIRECTORY_SEPARATOR.'_'.strtolower(Str::plural($model)).'.js'), $contentJs);
 
-        if (file_exists(public_path('js/appAjax.js'))) {
-            $this->error = true;
-            $this->line($this->errorMessage);
-            $this->newLine();
-            $this->error("File js/appAjax.js already exists!");
+        if (!file_exists(public_path('js/appAjax.js'))) {
+            $appJs = file_get_contents(base_path('vendor/santimilos/crud-package/src/resources/views/template/js/app.js'));
+            file_put_contents(public_path('js/appAjax.js'), $appJs);
         }
-        $appJs = file_get_contents(base_path('vendor/santimilos/crud-package/src/resources/views/template/js/app.js'));
-        file_put_contents(public_path('js/appAjax.js'), $appJs);
+
     }
 
     public function makeMMCR($model){
@@ -517,63 +488,6 @@ class MakeCrudCommand extends Command
 
         if (file_exists(app_path('Http/Controllers'.DIRECTORY_SEPARATOR.$model.'Controller.php'))) {
             $this->errorText = 'there is already a controller created with the '.$model.' assigned';
-            return $this->error = true;
-        }
-
-        if (file_exists(resource_path('views/components'))) {
-
-            if (file_exists(resource_path('views/components/flash-messages.blade.php'))) {
-                $this->error = true;
-                $this->line($this->errorMessage);
-                $this->newLine();
-                $this->errorText = "Component flash-messages.blade.php already exists!";
-
-                return $this->error = true;
-            }
-
-            if (file_exists(resource_path('views/components/title-header.blade.php'))) {
-                $this->error = true;
-                $this->line($this->errorMessage);
-                $this->newLine();
-                $this->errorText = "Component title-header.blade.php already exists!";
-
-                return $this->error = true;
-            }
-        }
-
-        if (file_exists(resource_path('views/layouts/app.blade.php'))) {
-            $this->error = true;
-            $this->line($this->errorMessage);
-            $this->newLine();
-            $this->errorText = "Layout app.blade.php already exists!";
-
-            return $this->error = true;
-        }
-
-        if (file_exists(resource_path('views/includes/includejs.blade.php'))) {
-            $this->error = true;
-            $this->line($this->errorMessage);
-            $this->newLine();
-            $this->errorText = "File includejs already exists!";
-
-            return $this->error = true;
-        }
-
-        if (file_exists(public_path('js/appAjax.js'))) {
-            $this->error = true;
-            $this->line($this->errorMessage);
-            $this->newLine();
-            $this->errorText = "File js/appAjax.js already exists!";
-
-            return $this->error = true;
-        }
-
-        if (file_exists(public_path('i18n/datatables-spanish.json'))) {
-            $this->error = true;
-            $this->line($this->errorMessage);
-            $this->newLine();
-            $this->errorText = "File datatables-spanish.json already exists!";
-
             return $this->error = true;
         }
 
