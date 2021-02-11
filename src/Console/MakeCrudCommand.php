@@ -221,18 +221,29 @@ class MakeCrudCommand extends Command
             $this->error("File ".strtolower(Str::plural($model)).DIRECTORY_SEPARATOR.'includes'." already exists!");
         }
 
-        if (file_exists(resource_path('views/components/flash-messages.blade.php'))) {
-            $this->error = true;
-            $this->line($this->errorMessage);
-            $this->newLine();
-            $this->error("you already have components with the same name as the components of this package!");
+        if (file_exists(resource_path('views/components'))) {
+
+            if (file_exists(resource_path('views/components/flash-messages.blade.php'))) {
+                $this->error = true;
+                $this->line($this->errorMessage);
+                $this->newLine();
+                $this->errorText = "Component flash-messages.blade.php already exists!";
+            }
+
+            if (file_exists(resource_path('views/components/title-header.blade.php'))) {
+                $this->error = true;
+                $this->line($this->errorMessage);
+                $this->newLine();
+                $this->errorText = "Component title-header.blade.php already exists!";
+            }
         }
 
         mkdir(resource_path('views'.DIRECTORY_SEPARATOR.strtolower(Str::plural($model))), 0700);
         mkdir(resource_path('views'.DIRECTORY_SEPARATOR.strtolower(Str::plural($model)).DIRECTORY_SEPARATOR.'assets'), 0700);
         mkdir(resource_path('views'.DIRECTORY_SEPARATOR.strtolower(Str::plural($model)).DIRECTORY_SEPARATOR.'includes'), 0700);
-        mkdir(resource_path('views/components'), 0700);
-
+        if(!file_exists('views/components')){
+            mkdir(resource_path('views/components'), 0700);
+        }
     }
 
     public function makeFiles($model){
@@ -356,7 +367,7 @@ class MakeCrudCommand extends Command
             $this->error("File js/appAjax.js already exists!");
         }
 
-        $appJs = file_get_contents(base_path('vendor/santimilos/crud-package/src/resources/views/js/appAjax.js'));
+        $appJs = file_get_contents(base_path('vendor/santimilos/crud-package/src/resources/views/template/js/app.js'));
         file_put_contents(public_path('js/appAjax.js'), $appJs);
     }
 
