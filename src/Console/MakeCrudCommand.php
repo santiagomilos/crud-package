@@ -250,6 +250,10 @@ class MakeCrudCommand extends Command
             mkdir(resource_path('views/includes'), 0700);
         }
 
+        if(!file_exists(resource_path('views/layouts/app.blade.php'))){
+            mkdir(resource_path('views/layouts'), 0700);
+        }
+
         if(!file_exists(public_path('js'))){
             mkdir(public_path('js'), 0700);
         }
@@ -260,6 +264,19 @@ class MakeCrudCommand extends Command
         $this->makeJSFile($model);
         $this->makeComponents();
         $this->makeIncludeJS();
+        $this->makeLayout();
+    }
+
+    public function makeLayout(){
+        if (file_exists(resource_path('views/layouts/app.blade.php'))) {
+            $this->error = true;
+            $this->line($this->errorMessage);
+            $this->newLine();
+            $this->error("Layout app.blade.php already exists!");
+        }
+
+        $layoutContent = file_get_contents(base_path('vendor/santimilos/crud-package/src/resources/views/template/layouts/app.blade.php'));
+        file_put_contents(resource_path('views/layouts/app.blade.php'), $layoutContent);
     }
 
     public function makeViews($model){
@@ -509,6 +526,25 @@ class MakeCrudCommand extends Command
                 return $this->error = true;
             }
         }
+
+        if (file_exists(resource_path('views/layouts/app.blade.php'))) {
+            $this->error = true;
+            $this->line($this->errorMessage);
+            $this->newLine();
+            $this->errorText = "Layout app.blade.php already exists!";
+
+            return $this->error = true;
+        }
+
+        if (file_exists(resource_path('views/includes/includejs.blade.php'))) {
+            $this->error = true;
+            $this->line($this->errorMessage);
+            $this->newLine();
+            $this->errorText = "File includejs already exists!";
+
+            return $this->error = true;
+        }
+
         return $this->error = false;
     }
 

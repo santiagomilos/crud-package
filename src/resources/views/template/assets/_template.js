@@ -42,10 +42,6 @@ $(document).ready(function() {
         },
         columnDefs: [
             {
-                targets: 4,
-                width: "100px"
-            },
-            {
                 targets: 0,
                 width: "20px"
             },
@@ -55,8 +51,8 @@ $(document).ready(function() {
             { data: "id" },
             {
                 data(data) {
-                    return `<a href="[URL_FORM]/${data.id}" class="btn btn-sm btn-clean btn-icon mr-2" title="Edit details">
-                            <a href="javascript:void(0);" onclick="deleteItem(${data.id})" class="btn btn-sm btn-clean btn-icon" title="Eliminar">`
+                    return `<a href="[URL_FORM]/${data.id}" class="btn btn-sm btn-clean btn-icon mr-2" title="Edit details"><i class="fas fa-pencil-alt"></i>
+                            <a href="javascript:void(0);" onclick="deleteItem(${data.id})" class="btn btn-sm btn-clean btn-icon" title="Eliminar"><i class="far fa-trash-alt"></i>`
                 }
             }
         ]

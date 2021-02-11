@@ -5,7 +5,6 @@
     <link href="{{ asset("css/libs/jquery-confirm.min.css") }}" rel="stylesheet">
 @endpush
 @push("endBody")
-    <script src="{{ asset('js/appAjax.js') }}"></script>
     <script src="{{ asset("js/libs/jquery-confirm.min.js")}}"></script>
     <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
@@ -18,7 +17,7 @@
 
 @section("content")
 
-    <x-title-header title="Lista de [template]" :urls="[[[template]]]"></x-title-header>
+    <x-title-header title="Lista de [template]" :urls="[['[template]']]"></x-title-header>
 
     <div class="card border-right">
         <div class="card-body">
@@ -38,7 +37,7 @@
                            class="table table-striped table-bordered dt-responsive display no-wrap" style="width:100%">
                         <thead>
                         <tr>
-                            <th>Example</th>
+                            <th>id</th>
                             <th></th>
                         </tr>
                         </thead>
