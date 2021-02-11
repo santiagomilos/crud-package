@@ -241,7 +241,7 @@ class MakeCrudCommand extends Command
         mkdir(resource_path('views'.DIRECTORY_SEPARATOR.strtolower(Str::plural($model))), 0700);
         mkdir(resource_path('views'.DIRECTORY_SEPARATOR.strtolower(Str::plural($model)).DIRECTORY_SEPARATOR.'assets'), 0700);
         mkdir(resource_path('views'.DIRECTORY_SEPARATOR.strtolower(Str::plural($model)).DIRECTORY_SEPARATOR.'includes'), 0700);
-        if(!file_exists('views/components')){
+        if(!file_exists(resource_path('views/components'))){
             mkdir(resource_path('views/components'), 0700);
         }
     }
