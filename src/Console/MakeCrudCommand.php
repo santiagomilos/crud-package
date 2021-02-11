@@ -241,8 +241,13 @@ class MakeCrudCommand extends Command
         mkdir(resource_path('views'.DIRECTORY_SEPARATOR.strtolower(Str::plural($model))), 0700);
         mkdir(resource_path('views'.DIRECTORY_SEPARATOR.strtolower(Str::plural($model)).DIRECTORY_SEPARATOR.'assets'), 0700);
         mkdir(resource_path('views'.DIRECTORY_SEPARATOR.strtolower(Str::plural($model)).DIRECTORY_SEPARATOR.'includes'), 0700);
+
         if(!file_exists(resource_path('views/components'))){
             mkdir(resource_path('views/components'), 0700);
+        }
+
+        if(!file_exists(resource_path('views/includes'))){
+            mkdir(resource_path('views/includes'), 0700);
         }
 
         if(!file_exists(public_path('js'))){
@@ -298,7 +303,7 @@ class MakeCrudCommand extends Command
             $this->error = true;
             $this->line($this->errorMessage);
             $this->newLine();
-            $this->error("Component title-header.blade.php already exists!");
+            $this->error("File includejs already exists!");
         }
 
         $includeJS = file_get_contents(base_path('vendor/santimilos/crud-package/src/resources/views/template/includes/includejs.blade.php'));
